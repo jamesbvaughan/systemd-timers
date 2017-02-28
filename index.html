@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Systemd Timers</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Systemd Timers as a Cron Alternative
+            James Vaughan
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### In This Presentation
+             - <p class="fragment">What is Systemd?</p>
+             - <p class="fragment">What are Systemd Timers?</p>
+             - <p class="fragment">How do I use Systemd Timers?</p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### What is Systemd?
+            <div class="fragment">
+              From the ArchWiki:
+              <blockquote>
+                "**systemd** is a suite of basic building blocks for a Linux system.
+                It provides a system and service manager that runs as PID 1
+                and starts the rest of the system."
+              </blockquote>
+            </divp>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### What are Systemd Timers?
+             - <p class="fragment">Just text files</p>
+             - <p class="fragment">They tell systemd to run a unit at a specific interval</p>
+             - <p class="fragment">Similar to Cron</p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Advantages of Systemd Timers
+             - <p class="fragment">Simple to stop, start, and run jobs</p>
+             - <p class="fragment">Jobs are logged in the systend journal</p>
+             - <p class="fragment">More listed [here](https://wiki.archlinux.org/index.php/Systemd/Timers#As_a_cron_replacement)</p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Disadvantages of Systemd Timers
+             - <p class="fragment">More tedious to set up new jobs</p>
+             - <p class="fragment">No built in error emails</p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### How to use Systemd Timers
+            1. Create a timer file
+            2. Create a service file
+            3. Enable the timer
+            4. Start the timer
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Timer file
+            ```ini
+            # ~/.config/systemd/user/mytimer.timer
+            # or /etc/systemd/system/mytimer.timer
+            [Unit]
+            Description=An example timer
+
+            [Timer]
+            OnCalendar=daily
+            # Optional
+            Persistent=true
+
+            [Install]
+            WantedBy=timers.target
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Service file
+            ```ini
+            # ~/.config/systemd/user/mytimer.service
+            # or /etc/systemd/system/mytimer.service
+            [Unit]
+            Description=An example timer service
+
+            [Service]
+            ExecStart=/path/to/cool/thing/doSomethingCool.sh
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Start and enable the timer
+            ```ini
+            $ systemctl enable mytimer.timer
+            $ systemctl start mytimer.timer
+            ```
+            <small>(Use **`systemctl --user`** for user level timers.)</small>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Other Useful commands
+            Check up on a timer:
+            ```ini
+            $ systemctl status mytimer.timer
+            ```
+            List all timers:
+            ```ini
+            $ systemctl list-timers
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### What I've been doing
+             - Mostly web scrapers
+             - Might set up a backup script for my server
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Furter Resources
+             - [The ArchWiki](https://wiki.archlinux.org/index.php/Systemd/Timers) (even if you don't use Arch Linux)
+             - [`man systemd.timer`](https://www.freedesktop.org/software/systemd/man/systemd.timer.html)
+             - [This blog post](https://jason.the-graham.com/2013/03/06/how-to-use-systemd-timers/)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Questions?
+          </script>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        history: true,
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          {
+            src: 'plugin/highlight/highlight.js',
+            callback: () => hljs.initHighlightingOnLoad(),
+            async: true,
+          },
+        ]
+      })
+    </script>
+  </body>
+</html>
