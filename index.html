@@ -177,7 +177,7 @@
           { src: 'plugin/markdown/markdown.js' },
           {
             src: 'plugin/highlight/highlight.js',
-            callback: () => hljs.initHighlightingOnLoad(),
+            callback: function () { hljs.initHighlightingOnLoad() },
             async: true,
           },
         ]
